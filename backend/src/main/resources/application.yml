@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: peaknxt-api
+
+firebase:
+  # Path to the service-account JSON you download from Firebase Console (keep it OUT of git)
+  credentials-path: ${FIREBASE_CREDENTIALS_PATH:./serviceAccountKey.json}
+  # Shown in Firebase Console > Storage (e.g. my-project.firebasestorage.app OR my-project.appspot.com)
+  storage-bucket: ${FIREBASE_STORAGE_BUCKET:sports-equipment-ecom-b0d8d.firebasestorage.app}
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  # Inserts 12 sample products on first start if the products collection is empty
+  seed-data: ${SEED_DATA:true}

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "football-pro-5",
+    "name": "Pro Match Football (Size 5)",
+    "category": "Balls",
+    "description": "Machine-stitched match football with a durable synthetic cover and consistent flight.",
+    "price": 1499,
+    "imageUrl": "https://placehold.co/600x600?text=Football",
+    "specifications": { "Size": "5", "Material": "PU", "Weight": "430 g" },
+    "stockQuantity": 40
+  },
+  {
+    "id": "basketball-indoor-7",
+    "name": "Indoor/Outdoor Basketball (Size 7)",
+    "category": "Balls",
+    "description": "Deep-channel rubber basketball with excellent grip for street and court play.",
+    "price": 1299,
+    "imageUrl": "https://placehold.co/600x600?text=Basketball",
+    "specifications": { "Size": "7", "Material": "Rubber", "Weight": "600 g" },
+    "stockQuantity": 35
+  },
+  {
+    "id": "badminton-racket-pro",
+    "name": "Lightweight Badminton Racket",
+    "category": "Rackets",
+    "description": "Graphite-composite racket, balanced for fast drives and smashes.",
+    "price": 2199,
+    "imageUrl": "https://placehold.co/600x600?text=Badminton+Racket",
+    "specifications": { "Weight": "83 g", "Material": "Graphite", "Grip": "G4" },
+    "stockQuantity": 25
+  },
+  {
+    "id": "tennis-racket-club",
+    "name": "Club Tennis Racket",
+    "category": "Rackets",
+    "description": "Oversized head for a bigger sweet spot, ideal for club and beginner players.",
+    "price": 3499,
+    "imageUrl": "https://placehold.co/600x600?text=Tennis+Racket",
+    "specifications": { "Head Size": "105 sq in", "Weight": "285 g", "Material": "Aluminium" },
+    "stockQuantity": 15
+  },
+  {
+    "id": "cricket-bat-kashmir",
+    "name": "Kashmir Willow Cricket Bat",
+    "category": "Bats",
+    "description": "Full-size Kashmir willow bat with a thick edge and a comfortable cane handle.",
+    "price": 2799,
+    "imageUrl": "https://placehold.co/600x600?text=Cricket+Bat",
+    "specifications": { "Size": "Full / SH", "Wood": "Kashmir Willow", "Weight": "1.1 kg" },
+    "stockQuantity": 20
+  },
+  {
+    "id": "baseball-bat-alloy",
+    "name": "Alloy Baseball Bat",
+    "category": "Bats",
+    "description": "Lightweight alloy bat with a rubber grip, great for practice and recreation.",
+    "price": 1899,
+    "imageUrl": "https://placehold.co/600x600?text=Baseball+Bat",
+    "specifications": { "Length": "32 in", "Material": "Alloy", "Weight": "800 g" },
+    "stockQuantity": 18
+  },
+  {
+    "id": "helmet-cricket-pro",
+    "name": "Cricket Batting Helmet",
+    "category": "Protective Gear",
+    "description": "Steel-grille helmet with impact-absorbing foam and an adjustable fit.",
+    "price": 1999,
+    "imageUrl": "https://placehold.co/600x600?text=Helmet",
+    "specifications": { "Size": "Adjustable", "Grille": "Steel", "Weight": "650 g" },
+    "stockQuantity": 22
+  },
+  {
+    "id": "shin-guards-junior",
+    "name": "Football Shin Guards",
+    "category": "Protective Gear",
+    "description": "Lightweight shin guards with an EVA backing and elastic straps.",
+    "price": 599,
+    "imageUrl": "https://placehold.co/600x600?text=Shin+Guards",
+    "specifications": { "Size": "M / L", "Material": "PP + EVA", "Weight": "120 g" },
+    "stockQuantity": 50
+  },
+  {
+    "id": "resistance-bands-set",
+    "name": "Resistance Bands (Set of 5)",
+    "category": "Fitness Accessories",
+    "description": "Five latex bands in graded resistance levels for strength and mobility work.",
+    "price": 799,
+    "imageUrl": "https://placehold.co/600x600?text=Resistance+Bands",
+    "specifications": { "Pieces": "5", "Material": "Natural Latex", "Includes": "Carry bag" },
+    "stockQuantity": 60
+  },
+  {
+    "id": "yoga-mat-6mm",
+    "name": "Non-Slip Yoga Mat (6 mm)",
+    "category": "Fitness Accessories",
+    "description": "Cushioned, non-slip mat for yoga, stretching and floor exercises.",
+    "price": 999,
+    "imageUrl": "https://placehold.co/600x600?text=Yoga+Mat",
+    "specifications": { "Thickness": "6 mm", "Size": "183 x 61 cm", "Material": "TPE" },
+    "stockQuantity": 45
+  },
+  {
+    "id": "agility-ladder-4m",
+    "name": "Agility Ladder (4 m)",
+    "category": "Training Equipment",
+    "description": "Flat-rung agility ladder for footwork and speed drills, with a carry bag.",
+    "price": 699,
+    "imageUrl": "https://placehold.co/600x600?text=Agility+Ladder",
+    "specifications": { "Length": "4 m", "Rungs": "8", "Material": "Nylon + PP" },
+    "stockQuantity": 30
+  },
+  {
+    "id": "skipping-rope-speed",
+    "name": "Speed Skipping Rope",
+    "category": "Training Equipment",
+    "description": "Adjustable steel-cable speed rope with ball-bearing handles.",
+    "price": 349,
+    "imageUrl": "https://placehold.co/600x600?text=Skipping+Rope",
+    "specifications": { "Length": "Adjustable 3 m", "Cable": "Steel", "Handle": "Aluminium" },
+    "stockQuantity": 0
+  }
+]

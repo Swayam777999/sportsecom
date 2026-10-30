@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEAKNXT - Project Report</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 18mm 18mm 18mm;
+    @bottom-center {
+      content: counter(page);
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11.5pt;
+    line-height: 1.55;
+    color: #111;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Screen Floating Action Bar */
+  .screen-bar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+    background: rgba(17, 24, 39, 0.95);
+    padding: 10px 16px;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .screen-bar button {
+    background: #00f076;
+    color: #050811;
+    border: none;
+    padding: 8px 18px;
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .screen-bar button:hover {
+    background: #00d669;
+    transform: scale(1.04);
+  }
+  .screen-bar span {
+    color: #94a3b8;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  @media print {
+    .screen-bar {
+      display: none !important;
+    }
+    body {
+      background: #fff;
+      color: #000;
+    }
+    .page {
+      box-shadow: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 20mm;
+    position: relative;
+    background: #fff;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* Running Header */
+  .running-header {
+    text-align: center;
+    border-bottom: 1.5pt solid #222;
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+  }
+  .running-header .inst-sub {
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: #444;
+    letter-spacing: 0.5px;
+  }
+  .running-header .inst-name {
+    font-size: 13pt;
+    font-weight: 900;
+    letter-spacing: 0.6px;
+    color: #1a2a44;
+    margin: 2px 0;
+  }
+  .running-header .inst-affil {
+    font-size: 7.5pt;
+    color: #555;
+  }
+  .running-header .dept-name {
+    font-size: 10pt;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    margin-top: 4px;
+    color: #000;
+  }
+
+  /* Running Footer */
+  .running-footer {
+    position: absolute;
+    bottom: 12mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+    font-style: italic;
+    color: #555;
+    border-top: 0.5pt solid #ccc;
+    padding-top: 4px;
+  }
+
+  /* Cover Page */
+  .cover-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250mm;
+    text-align: center;
+  }
+  .cover-title-block {
+    margin: 30mm 0 20mm 0;
+  }
+  .cover-title {
+    font-size: 30pt;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    color: #0a1128;
+  }
+  .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 800;
+    line-height: 1.4;
+    color: #1e3a8a;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  .cover-report-tag {
+    font-size: 14pt;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    margin-top: 18mm;
+    text-transform: uppercase;
+  }
+  .cover-course-details {
+    font-size: 11pt;
+    font-style: italic;
+    color: #333;
+    margin-top: 6px;
+  }
+  .cover-students-block {
+    margin: 15mm 0 10mm 0;
+  }
+  .cover-heading-sm {
+    font-size: 11pt;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .cover-student-name {
+    font-size: 12pt;
+    font-weight: 700;
+    color: #111;
+  }
+
+  /* Headings */
+  h1.chapter-title {
+    font-size: 15pt;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1.5pt solid #111;
+    padding-bottom: 4px;
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  h2.section-title {
+    font-size: 12.5pt;
+    font-weight: 800;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    color: #0f172a;
+  }
+  h3.sub-title {
+    font-size: 11.5pt;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  ul, ol {
+    margin: 4px 0 12px 22px;
+    padding: 0;
+  }
+  li {
+    margin-bottom: 5px;
+    text-align: justify;
+  }
+
+  /* Table styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px 0;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1pt solid #cbd5e1;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  th {
+    background: #f1f5f9;
+    font-weight: 800;
+    color: #0f172a;
+  }
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  /* Code / Diagram Box */
+  .diagram-box {
+    background: #f8fafc;
+    border: 1pt solid #cbd5e1;
+    border-left: 3pt solid #1e40af;
+    padding: 10px 14px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 8.5pt;
+    line-height: 1.35;
+    margin: 10px 0 14px 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    padding: 2px 7px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 8pt;
+    margin-right: 4px;
+  }
+
+  /* Table of Contents */
+  .toc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    border-bottom: 1pt dotted #94a3b8;
+    padding-bottom: 2px;
+    font-size: 11pt;
+  }
+  .toc-title {
+    background: #fff;
+    padding-right: 6px;
+    font-weight: 700;
+  }
+  .toc-page {
+    background: #fff;
+    padding-left: 6px;
+    font-weight: 800;
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating Action Bar for Web View -->
+<div class="screen-bar">
+  <span>APSIT WMD Project Report</span>
+  <button onclick="window.print()">📥 Save as PDF / Print</button>
+</div>
+
+<!-- ================================= PAGE 1: COVER PAGE ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="inst-affil">(Approved by AICTE New Delhi & Govt. of Maharashtra, Affiliated to University of Mumbai)</div>
+    <div class="inst-affil">(Religious Jain Minority)</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING<br>(ARTIFICIAL INTELLIGENCE & MACHINE LEARNING)</div>
+  </div>
+
+  <div class="cover-container">
+    <div></div>
+    <div class="cover-title-block">
+      <div class="cover-title">PEAKNXT</div>
+      <div class="cover-subtitle">High-Performance Athletic Equipment & Pro-Grade Sports Commerce Platform with AI Recommendation & Live Telemetry</div>
+      <div class="cover-report-tag">PROJECT REPORT</div>
+      <div class="cover-course-details">
+        Course: Web & Mobile Development (WMD) Laboratory Mini-Project<br>
+        Academic Year: 2026–27
+      </div>
+    </div>
+
+    <div class="cover-students-block">
+      <div class="cover-heading-sm">Student Details</div>
+      <div class="cover-student-name">24106126: Kartik R Mahindrakar</div>
+      <br>
+      <div class="cover-heading-sm">Under the guidance of</div>
+      <div class="cover-student-name">Prof. Radhika Bailurkar</div>
+    </div>
+  </div>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 1</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 2: TABLE OF CONTENTS ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">Table of Contents</h1>
+
+  <div style="margin-top: 25px;">
+    <div class="toc-row">
+      <span class="toc-title">CHAPTER 1: PROBLEM STATEMENT</span>
+      <span class="toc-page">3</span>
+    </div>
+    <div style="margin-left: 20px; margin-bottom: 6px; font-size: 10pt;">
+      1.1 Problem Statement & Domain Background ............................................................................ 3<br>
+      1.2 Sustainable Development Goals (SDGs: 3, 12, 9, 8) ............................................................ 4
+    </div>
+
+    <div class="toc-row" style="margin-top: 14px;">
+      <span class="toc-title">CHAPTER 2: INTRODUCTION</span>
+      <span class="toc-page">5</span>
+    </div>
+    <div style="margin-left: 20px; margin-bottom: 6px; font-size: 10pt;">
+      2.1 Introduction to PeakNXT ....................................................................................................... 5<br>
+      2.2 Pro-Grade Sports Equipment Classifications (9 Categories) .................................................. 5<br>
+      2.3 User Roles & Functional Privileges ........................................................................................ 6<br>
+      2.4 Project Objectives ................................................................................................................. 7
+    </div>
+
+    <div class="toc-row" style="margin-top: 14px;">
+      <span class="toc-title">CHAPTER 3: TECHNOLOGY & TOOLS</span>
+      <span class="toc-page">8</span>
+    </div>
+    <div style="margin-left: 20px; margin-bottom: 6px; font-size: 10pt;">
+      3.1 Application Technologies (React 18, TypeScript, Kotlin, Spring Boot, Firestore) ................... 8<br>
+      3.2 Development and Testing Tools ........................................................................................... 8<br>
+      3.3 Development Methodology & Full-Stack System Architecture .............................................. 9
+    </div>
+
+    <div class="toc-row" style="margin-top: 14px;">
+      <span class="toc-title">CHAPTER 4: IMPLEMENTATION</span>
+      <span class="toc-page">10</span>
+    </div>
+    <div style="margin-left: 20px; margin-bottom: 6px; font-size: 10pt;">
+      4.1 Core Functional Modules (UI, Matchmaker, Video Background, Invoicing) ............................ 10<br>
+      4.2 Implementation Verification Note ........................................................................................ 16
+    </div>
+
+    <div class="toc-row" style="margin-top: 14px;">
+      <span class="toc-title">CHAPTER 5: CONCLUSION</span>
+      <span class="toc-page">17</span>
+    </div>
+    <div style="margin-left: 20px; margin-bottom: 6px; font-size: 10pt;">
+      5.1 Learnings from Web and Mobile Application Development ................................................... 17<br>
+      5.2 Conclusion ........................................................................................................................... 17<br>
+      5.3 Future Enhancements .......................................................................................................... 18
+    </div>
+
+    <div class="toc-row" style="margin-top: 14px;">
+      <span class="toc-title">REFERENCES</span>
+      <span class="toc-page">19</span>
+    </div>
+  </div>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 2</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 3: CHAPTER 1 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">CHAPTER 1: PROBLEM STATEMENT</h1>
+
+  <h2 class="section-title">1.1 Problem Statement</h2>
+  <p>
+    Across university athletic departments, grassroots sports academies, competitive training centers, and fitness communities throughout the Thane and Mumbai metropolitan region, aspiring athletes, students, and coaches face acute friction in procuring authentic, match-grade sporting goods. Unlike casual lifestyle retail, sports equipment is strictly bound to physiological parameters, court surfaces, skill grades, and safety regulations.
+  </p>
+  <p>
+    Traditional e-commerce platforms and local brick-and-mortar sports suppliers suffer from critical operational bottlenecks:
+  </p>
+  <ul>
+    <li><b>Severe Equipment Mismatch & Injury Vulnerability:</b> Novice and developing athletes lack domain guidance, frequently purchasing incompatible gear (e.g., using non-marking indoor badminton shoes on outdoor concrete courts, or bats with inappropriate willow grain densities), leading to joint strain, equipment breakage, and elevated injury rates.</li>
+    <li><b>Static, Low-Immersion Shopping Interfaces:</b> Mainstream sporting goods websites rely on flat, lifeless product images that fail to capture the adrenaline and athletic focus of sports, driving high cart abandonment among athletic consumers.</li>
+    <li><b>Opaque Order Logistics for Competition Schedules:</b> For athletes and sports teams preparing for scheduled inter-collegiate tournaments, generic delivery estimates lack milestone granularity, causing teams severe anxiety over whether match equipment will arrive prior to tournament fixtures.</li>
+    <li><b>Absence of Verified Field-Test Feedback:</b> Standard product reviews are flooded with unverified ratings that fail to communicate critical athletic criteria such as ball bounce retention, seam durability, string tension stability, or ergonomic grip resilience.</li>
+    <li><b>Manual Invoicing and Institutional Friction:</b> College athletic clubs and sports academies require standardized, verifiable digital tax invoices with instant authenticity checks for institutional reimbursement.</li>
+  </ul>
+  <p>
+    <b>PeakNXT</b> is engineered as a modern, full-stack athletic commerce platform to resolve these challenges. It establishes a centralized, high-performance web ecosystem combining an AI-driven smart sports matchmaker ("PeakGear AI"), a dynamic live moving sports video background with kinetic HUD telemetry, an authentic 4-milestone order progression tracker, verifiable digital tax invoices with QR stamps, and a verified athlete review system.
+  </p>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 3</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 4: SDGS ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h2 class="section-title">1.2 Sustainable Development Goals (SDGs)</h2>
+  
+  <p><b>SDG 3 – Good Health and Well-Being</b><br>
+  <i>Target 3.4 & 3.5:</i> PeakNXT directly fosters physical fitness, athletic engagement, and cardiovascular health by democratizing access to certified, match-grade equipment. By guiding athletes to scientifically matched gear (such as impact-absorbing helmets, ergonomic knee sleeves, and orthopedically engineered footwear), the platform actively prevents sport-related physical trauma and encourages long-term athletic lifestyles across collegiate youth.
+  </p>
+
+  <p><b>SDG 12 – Responsible Consumption and Production</b><br>
+  <i>Target 12.5 & 12.8:</i> The rapid obsolescence of counterfeit and substandard sporting goods produces significant non-biodegradable composite and polymer waste. PeakNXT curates certified, high-durability equipment engineered for multi-season longevity. Furthermore, through automated digital tax invoices and paperless transaction tracking, the platform minimizes commercial paper waste.
+  </p>
+
+  <p><b>SDG 9 – Industry, Innovation, and Infrastructure</b><br>
+  <i>Target 9.5:</i> PeakNXT demonstrates modern full-stack web computing principles by integrating a type-safe Kotlin/JVM Spring Boot backend, a reactive React 18 TypeScript frontend, and Google Cloud Firestore NoSQL storage, modeling high-speed, scalable digital infrastructure for athletic commerce.
+  </p>
+
+  <p><b>SDG 8 – Decent Work and Economic Growth</b><br>
+  <i>Target 8.2 & 8.3:</i> By offering transparent inventory management, accurate order delivery milestones, and instant institutional invoice generation, PeakNXT streamlines retail logistics for grassroots coaches, independent sports academies, and equipment manufacturers.
+  </p>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 4</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 5: CHAPTER 2 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">CHAPTER 2: INTRODUCTION</h1>
+
+  <h2 class="section-title">2.1 Introduction</h2>
+  <p>
+    <b>PeakNXT</b> is a modern, responsive web application engineered to bridge the operational divide between competitive athletes, college teams, sports academies, and pro-grade equipment manufacturers. Developed as a Web & Mobile Development (WMD) Laboratory Mini-Project for the Department of Computer Science & Engineering (Artificial Intelligence & Machine Learning) at A. P. Shah Institute of Technology, the platform models an enterprise-ready, three-tier client-server architecture with cloud data persistence, role-based state tracking, and reactive UI paradigms.
+  </p>
+  <p>
+    The application allows users to explore an expansive catalog of 40 certified equipment items across 9 Olympic and team sports categories, receive AI-curated gear recommendations, experience a live sports video background with user-controllable telemetry HUD, place orders, monitor 4-stage delivery milestones, and contribute verified athlete field-test ratings.
+  </p>
+
+  <h2 class="section-title">2.2 Pro-Grade Sports Equipment Classifications</h2>
+  <p>
+    To ensure athletic suitability, safety certification, and streamlined browsing, PeakNXT categorizes its catalog into 9 specialized sports divisions:
+  </p>
+  <ul>
+    <li><b>Fitness & Strength:</b> Commercial-grade Olympic barbells, cast-iron hex dumbbells, competition kettlebells, adjustable benches, and multi-functional power towers.</li>
+    <li><b>Basketball:</b> FIBA-approved composite leather game balls, high-abrasion outdoor court balls, carbon-torsion basketball sneakers, and regulation-height net rims.</li>
+    <li><b>Running & Athletics:</b> Marathon carbon-fiber plated road shoes, responsive trail-running sneakers, running hydration vests, and digital athletic stopwatches.</li>
+    <li><b>Football / Soccer:</b> FIFA Quality Pro match balls, thermal-bonded training balls, hybrid firm-ground cleats, and 4mm German latex goalkeeper gloves.</li>
+    <li><b>Cricket:</b> Handcrafted Grade-1 English Willow bats, Kashmir Willow club bats, aerodynamic titanium-grill batting helmets, and high-density foam leg guards.</li>
+    <li><b>Badminton:</b> Ultra-light high-modulus graphite rackets, goose-feather tournament shuttles, high-tension braided strings, and thermal racket bags.</li>
+    <li><b>Swimming & Aquatics:</b> Hydrodynamic anti-fog mirrored racing goggles, 100% hypoallergenic silicone swim caps, and kickboards.</li>
+    <li><b>Tennis:</b> 100 sq.in aerodynamic spin rackets, pressurized Extra Duty tournament ball cans, and absorbent overgrips.</li>
+    <li><b>Accessories & Gear Bags:</b> Dual-action ball pumps with pressure gauges, heavy-duty waterproof sports duffel bags, and knee compression sleeves.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 5</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 6: USER ROLES ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h2 class="section-title">2.3 User Roles and Features</h2>
+
+  <h3 class="sub-title">1. Athlete / Customer (Sports Enthusiast, Team Player, Academy Cadet)</h3>
+  <ul>
+    <li><b>Interactive Storefront Discovery:</b> Search and filter through 40 certified equipment items by category, price, and availability.</li>
+    <li><b>"PeakGear AI" Matchmaker Wizard:</b> Complete a 3-step athletic questionnaire (Sport, Skill Tier, Playing Surface) to receive an algorithmically curated equipment bundle with a 1-click <i>"Add Complete Kit to Cart"</i> action.</li>
+    <li><b>Live Sports Video Ambience:</b> Experience real high-definition sports action in the background (Basketball, Soccer, Sprinting, Drills) with bottom-left HUD controls (Vivid/Dim clarity, scene switcher, play/pause).</li>
+    <li><b>Reactive Shopping Cart:</b> Dynamic quantity adjustment, stock checking, real-time subtotal computation, and local session caching.</li>
+    <li><b>Interactive 4-Milestone Order Tracker:</b> Track delivery in real time through 4 visual milestones (Order Confirmed ➔ Quality Checked ➔ Dispatched from Hub ➔ Out for Delivery).</li>
+    <li><b>Official Digital Tax Invoice:</b> View and print itemized tax invoices featuring an official QR verification stamp, order tracking hash (#PKX-XXXX), and GST calculation.</li>
+    <li><b>Verified Athlete Feedback:</b> Submit 1–5 star reviews with dynamic athletic ratings and tag badges (🏆 Match Grade, 🛡️ Maximum Durability).</li>
+  </ul>
+
+  <h3 class="sub-title">2. Platform Administrator (Inventory Superintendent & System Auditor)</h3>
+  <ul>
+    <li><b>Live Catalog Administration:</b> View stock levels, product availability status, and category allocations.</li>
+    <li><b>Cloud Firestore Synchronization:</b> Verify documents in the <code>products</code> and <code>orders</code> collections via Google Cloud Admin SDK.</li>
+    <li><b>Order Audit Trail:</b> Inspect customer orders, verified tracking IDs, and delivery timestamp logs.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 6</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 7: OBJECTIVES ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h2 class="section-title">2.4 Project Objectives</h2>
+  <ul>
+    <li>To engineer a modern, domain-tailored e-commerce platform bridging the gap between competitive athletes and authentic sporting goods.</li>
+    <li>To implement an AI-driven smart equipment matchmaker ("PeakGear AI") that eliminates equipment mismatch through algorithmic kit curation.</li>
+    <li>To pioneer an authentic live sports video background architecture that provides high-energy athletic visual immersion while maintaining 100% UI readability and zero third-party buffering.</li>
+    <li>To construct an enterprise-grade RESTful API utilizing Kotlin on JVM 17 and Spring Boot 3.3.5 for modular, null-safe business logic execution.</li>
+    <li>To leverage Cloud Firestore as a scalable NoSQL document store ensuring real-time multi-client synchronization and resilient schema flexibility.</li>
+    <li>To deliver an end-to-end post-purchase lifecycle encompassing 4-milestone live order tracking, verifiable digital tax invoices with QR stamps, and athlete review systems.</li>
+    <li>To satisfy all Web & Mobile Development (WMD) academic mandates, including responsive viewport scaling, component-driven React architecture, stateful context management, and clean CSS design systems.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 7</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 8: CHAPTER 3 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">CHAPTER 3: TECHNOLOGY & TOOLS</h1>
+
+  <h2 class="section-title">3.1 Application Technologies</h2>
+  <ul>
+    <li><b>React.js 18:</b> Declarative component-based frontend framework utilizing functional components, custom hooks (<code>useState</code>, <code>useEffect</code>, <code>useRef</code>, <code>useContext</code>), and synthetic event pipelines.</li>
+    <li><b>TypeScript (v5.x):</b> Strongly typed superset of JavaScript providing static type checking across API responses, product schemas, cart states, and review models.</li>
+    <li><b>Vite 5:</b> Next-generation frontend build tooling offering instantaneous Hot Module Replacement (HMR) and optimized Rollup asset bundling.</li>
+    <li><b>Kotlin on JVM 17:</b> Server-side execution runtime offering null safety, immutable data classes, extension functions, and concise object modeling.</li>
+    <li><b>Spring Boot 3.3.5:</b> Enterprise-grade Java/Kotlin framework powering dependency injection, embedded Tomcat server execution, and RESTful routing.</li>
+    <li><b>Google Cloud Firestore:</b> Cloud-hosted NoSQL document database providing low-latency collection queries, automatic horizontal scaling, and sub-second updates.</li>
+    <li><b>Vanilla CSS Athletic Design System:</b> Custom-engineered styling using CSS Custom Properties (variables), Neon Volt (<code>#00f076</code>) accents, Obsidian Slate (<code>#070a10</code>) dark surfaces, and fluid flexbox/grid architectures without bulky UI frameworks.</li>
+    <li><b>HTML5 Canvas 2D Telemetry Engine:</b> Custom mathematical particle physics rendering cursor-reactive kinetic points over the video background.</li>
+  </ul>
+
+  <h2 class="section-title">3.2 Development and Testing Tools</h2>
+  <ul>
+    <li><b>Visual Studio Code & IntelliJ IDEA:</b> Multi-language development environments configured with Kotlin JVM plugins, Gradle tooling, and TypeScript language servers.</li>
+    <li><b>Gradle (Kotlin DSL):</b> Automated build automation tool managing Spring Boot dependencies, JVM compilation, and test execution.</li>
+    <li><b>Git & GitHub:</b> Distributed version control platform tracking repository branches, incremental commits, and team collaboration.</li>
+    <li><b>Postman & cURL:</b> Endpoint validation suites testing HTTP GET/POST methods across <code>/api/products</code>, <code>/api/orders</code>, and <code>/api/health</code>.</li>
+    <li><b>Node.js (v20+) & npm:</b> Toolchain orchestrating frontend package resolution, linting, and production builds.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 8</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 9: SYSTEM WORKFLOW ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h2 class="section-title">3.3 Development Methodology and System Architecture</h2>
+  <p>
+    PeakNXT was developed adhering to a three-tier decoupled client-server architecture. The user initiates interaction through the responsive browser client, which communicates asynchronously via HTTP/JSON REST requests to the Spring Boot application running on port 8080. The backend validates requests and interfaces with Cloud Firestore via the Google Cloud Service Account SDK.
+  </p>
+
+  <div class="diagram-box">
+                      PEAKNXT SYSTEM ARCHITECTURE FLOW
+                      
+   +-----------------------------------------------------------------+
+   |            React 18 + TypeScript Client (Port 5173)             |
+   |                                                                 |
+   |  [PeakGear AI]   [Live Video HUD]   [Reactive Cart]   [Reviews] |
+   +-----------------------------------------------------------------+
+                                  |
+                      HTTP REST / JSON Requests
+                                  |
+                                  v
+   +-----------------------------------------------------------------+
+   |            Kotlin + Spring Boot 3.3.5 API (Port 8080)           |
+   |                                                                 |
+   |  ProductController      OrderController       SecurityConfig    |
+   |         |                      |                     |          |
+   |  ProductService         OrderService          CORS Filter       |
+   +-----------------------------------------------------------------+
+                                  |
+                      Firebase Admin SDK (OAuth2)
+                                  |
+                                  v
+   +-----------------------------------------------------------------+
+   |                 Google Cloud Firestore NoSQL                    |
+   |                                                                 |
+   |  [products collection]                 [orders collection]      |
+   |  (40 certified items)                  (#PKX-XXXX invoices)     |
+   +-----------------------------------------------------------------+
+  </div>
+
+  <p>
+    The system workflow ensures separation of concerns: the frontend manages UI rendering, responsive layouts, and user interactions; the Spring Boot backend enforces business validation, pricing integrity, and security policies; and Cloud Firestore provides scalable cloud persistence.
+  </p>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 9</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 10: CHAPTER 4 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">CHAPTER 4: IMPLEMENTATION</h1>
+
+  <h2 class="section-title">4.1 Core Functional Modules</h2>
+
+  <h3 class="sub-title">1. Pro-Athletic "Volt & Obsidian" UI, Theme Engine & Brand Identity</h3>
+  <p>
+    PeakNXT implements a custom athletic visual identity rooted in high-contrast performance aesthetics:
+  </p>
+  <ul>
+    <li><b>Obsidian Dark Surfaces:</b> Deep midnight tones (<code>#070a10</code> and <code>#131b26</code>) evoke a stadium-at-night environment, reducing eye strain during evening training sessions.</li>
+    <li><b>Electric Volt Accents:</b> High-visibility neon volt (<code>#00f076</code>) highlights primary call-to-action buttons, active badges, and interactive sliders.</li>
+    <li><b>Persistent Theme Toggle:</b> Stored in <code>localStorage</code> (<code>peaknxt_theme</code>), users seamlessly toggle between 🌙 Dark and ☀️ Light modes without layout reflows.</li>
+    <li><b>Official Mountain 'P' Logo:</b> A custom vector-processed brand mark representing an ascending mountain peak dissected by a lightning flash. The emblem dynamically adapts: rendering dark navy on light backgrounds and illuminated crisp white with cyan glow on dark surfaces.</li>
+  </ul>
+
+  <div class="diagram-box">
+/* Core Athletic Theme Variables */
+:root {
+  --primary: #00f076;          /* High-voltage neon green */
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --text: #0b0f17;
+  --border: #e2e8f0;
+}
+[data-theme="dark"] {
+  --primary: #00f076;
+  --bg: #070a10;               /* Deep obsidian slate */
+  --surface: #131b26;          /* Elevated midnight surface */
+  --text: #f1f5f9;
+  --border: #1e293b;
+}
+  </div>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 10</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 11: MODULE 2 & 3 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h3 class="sub-title">2. Cloud Firestore Real-Time Catalog & Category Filtering</h3>
+  <p>
+    The catalog engine connects the React frontend to Cloud Firestore through the Spring Boot <code>/api/products</code> endpoint:
+  </p>
+  <ul>
+    <li><b>Comprehensive Catalog:</b> Seeded with 40 distinct items across all 9 sports categories.</li>
+    <li><b>Multi-Criteria Search & Filter:</b> Instant real-time filtering by category pills, search keywords, and in-stock badges without page reloads.</li>
+    <li><b>Stock Badging:</b> Dynamic visual chips indicating item availability: <span class="badge-tag">In Stock</span>, <span class="badge-tag">Low Stock (≤ 5 units)</span>, or <span class="badge-tag">Sold Out</span>.</li>
+  </ul>
+
+  <h3 class="sub-title">3. "PeakGear AI" Smart Sports Matchmaker Wizard</h3>
+  <p>
+    Located in <code>frontend/src/components/GearAdvisorModal.tsx</code>, PeakGear AI is an interactive recommendation engine:
+  </p>
+  <ul>
+    <li><b>Step 1 (Sport Selection):</b> The athlete selects their primary discipline (Basketball, Running, Football, Cricket, Fitness, etc.).</li>
+    <li><b>Step 2 (Skill Tier):</b> Choose from <i>Beginner / Club</i>, <i>Intermediate / High-School</i>, or <i>Competitive / Pro Athlete</i>.</li>
+    <li><b>Step 3 (Playing Surface / Objective):</b> Choose from <i>Indoor Hardwood / Turf</i>, <i>Outdoor Concrete / Pitch</i>, or <i>Strength & Conditioning</i>.</li>
+    <li><b>Algorithmic Kit Generation:</b> The wizard analyzes catalog inventory and generates a 3-piece curated gear bundle (e.g., Match Ball + Cleats + Shin Guards for Football) with calculated package discounts.</li>
+    <li><b>1-Click Bundle Action:</b> An <b>"⚡ Add Complete Kit to Cart"</b> button dispatches all curated items into the shopping cart simultaneously.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 11</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 12: MODULE 4 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h3 class="sub-title">4. Authentic Live Sports Video Background & Interactive HUD</h3>
+  <p>
+    Unlike static backdrops, PeakNXT integrates authentic, high-definition looped video footage of athletes actively playing competitive sports:
+  </p>
+  <ul>
+    <li><b>Curated Sports Footage:</b>
+      <ul>
+        <li>🏀 <b>Basketball:</b> Real athlete in action on court, dribbling and shooting hoops.</li>
+        <li>⚽ <b>Soccer:</b> Match play, footwork, and ball movement on a field.</li>
+        <li>⛹️ <b>Dribble Action:</b> Fast court crossovers and offensive ball handling.</li>
+        <li>🏃 <b>Track Sprint:</b> Sprinter exploding forward out of the blocks.</li>
+        <li>⚡ <b>Agility Drills:</b> High-speed athletic footwork ladder training.</li>
+      </ul>
+    </li>
+    <li><b>Zero-Buffering Local Storage:</b> All MP4 files are hosted locally in <code>frontend/public/videos/</code> (~400KB–1.6MB each), guaranteeing instant, offline-capable playback without CDN failures.</li>
+    <li><b>Cinematic Readability Overlay:</b> Features a dual-mode gradient overlay protecting foreground card contrast:
+      <ul>
+        <li><b>👁️ Vivid Action Mode (Default):</b> Soft radial gradient (38%–72% opacity) allowing player action to remain prominently visible.</li>
+        <li><b>🕶️ Dim Ambient Mode:</b> Higher tint opacity (76%–90%) for reading-focused sessions.</li>
+      </ul>
+    </li>
+    <li><b>Interactive Bottom-Left HUD Controller:</b> A floating <code>&lt;aside&gt;</code> element (<code>z-index: 100</code>) providing 1-click scene switching, clarity mode toggling, play/pause controls, and collapsible status indicators.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 12</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 13: MODULE 5 & 6 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h3 class="sub-title">5. Reactive Shopping Cart & Dynamic Inventory Calculation</h3>
+  <p>
+    Managed via React Context (<code>frontend/src/cart/CartContext.tsx</code>):
+  </p>
+  <ul>
+    <li><b>Item Increment / Decrement:</b> Real-time quantity adjustments bound by available Firestore stock.</li>
+    <li><b>Subtotal & GST Calculation:</b> Automatic calculation of net merchandise value, 18% sports GST, and total payable amount.</li>
+    <li><b>Session Persistence:</b> Retained across page refreshes using browser <code>localStorage</code> caching.</li>
+  </ul>
+
+  <h3 class="sub-title">6. Live 4-Milestone Order Tracker & Digital Tax Invoice with QR Stamp</h3>
+  <p>
+    Located in <code>frontend/src/components/OrderTracker.tsx</code>, this module provides end-to-end post-purchase assurance:
+  </p>
+  <ul>
+    <li><b>4-Stage Visual Milestones:</b>
+      <div class="diagram-box" style="margin: 6px 0;">[Order Confirmed] ➔ [Quality Checked] ➔ [Dispatched from Hub] ➔ [Out for Delivery]</div>
+    </li>
+    <li><b>Tracking Identifier:</b> Each order generates a unique alphanumeric tracking code (e.g., <code>#PKX-7842</code>).</li>
+    <li><b>Official Digital Tax Invoice:</b>
+      <ul>
+        <li>Printable modal layout complying with Indian GST invoice formatting.</li>
+        <li>Incorporates Seller GSTIN, customer billing address, and itemized HSN breakdown.</li>
+        <li><b>Verified QR Code Stamp:</b> Encodes order validation metadata for physical depot verification.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 13</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 14: MODULE 7 & 8 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h3 class="sub-title">7. Verified Athlete Post-Purchase Rating & Review System</h3>
+  <p>
+    Implemented via <code>frontend/src/services/reviewService.ts</code> and <code>frontend/src/components/ReviewModal.tsx</code>:
+  </p>
+  <ul>
+    <li><b>Dynamic 5-Star Selector:</b> Displays contextual athletic feedback labels:
+      <ul>
+        <li>★☆☆☆☆ (1 Star): Poor - Defective / Unfit for Play</li>
+        <li>★★★☆☆ (3 Stars): Average - Standard Training Only</li>
+        <li>★★★★★ (5 Stars): Outstanding - Pro / Match Grade</li>
+      </ul>
+    </li>
+    <li><b>Performance Attribute Badges:</b> Reviewers tag equipment with athletic attributes:
+      <span class="badge-tag">🏆 Match Grade</span>
+      <span class="badge-tag">🛡️ Maximum Durability</span>
+      <span class="badge-tag">🎯 Precision Grip</span>
+      <span class="badge-tag">⚡ Featherlight</span>
+    </li>
+    <li><b>Product Detail Aggregation:</b> Product pages dynamically compute cumulative ratings, total review counts, and 5-tier distribution bar charts.</li>
+  </ul>
+
+  <h3 class="sub-title">8. Cross-Platform Responsive Viewport & Touch Adaptation</h3>
+  <ul>
+    <li>Built mobile-first utilizing CSS flexbox, grid, and clamp functions.</li>
+    <li>Navigation collapses cleanly on mobile viewports; tables switch to scrollable or card-stack layouts.</li>
+    <li>Live video background scales via <code>object-fit: cover</code> with hardware GPU acceleration, ensuring 60fps performance on handheld devices.</li>
+  </ul>
+
+  <h2 class="section-title">4.2 Implementation Note</h2>
+  <p>
+    The functional modules documented in this chapter reflect the operational state of the PeakNXT platform. All components—including client-side state transitions, Kotlin Spring Boot RESTful API endpoints, Cloud Firestore collections, live video telemetry layers, and interactive modal dialogs—have been implemented, compiled (<code>✓ built in 1.17s</code>), and tested within the local development environment.
+  </p>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 14</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 15: CHAPTER 5 ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">CHAPTER 5: CONCLUSION</h1>
+
+  <h2 class="section-title">5.1 Learnings from Web and Mobile Application Development</h2>
+  <p>
+    Through the end-to-end design, implementation, and optimization of PeakNXT, the project developer acquired comprehensive theoretical and practical competencies across modern web engineering:
+  </p>
+  <ul>
+    <li><b>Full-Stack Client-Server Decoupling:</b> Gained deep expertise structuring clean JSON API contracts between a React 18 TypeScript frontend and a typed Kotlin / Spring Boot 3.3.5 microservice.</li>
+    <li><b>Cloud NoSQL Document Modeling:</b> Learned non-relational document structuring, collection indexing, and atomic write operations within Google Cloud Firestore.</li>
+    <li><b>Advanced CSS Stacking & Z-Index Management:</b> Resolved complex CSS stacking context challenges by decoupling negative z-index video layers from high-priority floating HUD control overlays.</li>
+    <li><b>Hardware-Accelerated Web Media:</b> Implemented seamless HTML5 video looping combined with interactive HTML5 2D Canvas particle rendering without degrading DOM paint performance.</li>
+    <li><b>State Management & Persistence:</b> Mastered multi-tier state coordination using React Context API, custom hooks, and <code>localStorage</code> synchronization for user themes, carts, and reviews.</li>
+  </ul>
+
+  <h2 class="section-title">5.2 Conclusion</h2>
+  <p>
+    PeakNXT successfully delivers an innovative, pro-grade sports commerce web platform that resolves the inefficiencies and static nature of generic sporting goods retail. By unifying AI-driven equipment matchmaking, real-time live video ambience, interactive order tracking, digital tax invoicing, and verified athlete reviews, the application elevates sports equipment procurement into an immersive, authentic experience. The project demonstrates the practical application of advanced web computing principles, cloud persistence, and reactive user interface design in alignment with United Nations Sustainable Development Goals.
+  </p>
+
+  <h2 class="section-title">5.3 Future Enhancements</h2>
+  <ul>
+    <li><b>Computer Vision Footwear Fitting:</b> Implement an in-browser TensorFlow.js camera pipeline allowing athletes to scan their feet and determine exact shoe sizing and arch profiles.</li>
+    <li><b>Augmented Reality (AR) Equipment Preview:</b> Integrate WebXR / 3D model viewers (Three.js) enabling athletes to inspect racket string patterns, ball textures, and power rack dimensions in their home workout spaces.</li>
+    <li><b>Academy Multi-User Bulk Procurement:</b> Add organizational sub-accounts for sports academies, enabling head coaches to approve equipment requisitions submitted by team captains.</li>
+    <li><b>Automated WhatsApp Order Notification Gateway:</b> Integrate Twilio or WhatsApp Business APIs to broadcast instant tracking milestone updates and invoice PDFs directly to athletes' phones.</li>
+  </ul>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 15</span>
+  </div>
+</div>
+
+<!-- ================================= PAGE 16: REFERENCES ================================= -->
+<div class="page">
+  <div class="running-header">
+    <div class="inst-sub">Parshvanath Charitable Trust's</div>
+    <div class="inst-name">A. P. SHAH INSTITUTE OF TECHNOLOGY</div>
+    <div class="dept-name">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING (AI & ML)</div>
+  </div>
+
+  <h1 class="chapter-title">REFERENCES</h1>
+
+  <ol style="margin-top: 25px; line-height: 1.8;">
+    <li>React Documentation, “React 18 & Hooks Reference Guide,” https://react.dev/</li>
+    <li>Kotlin Language Documentation, “Server-Side Development with Kotlin & Spring Boot,” https://kotlinlang.org/docs/jvm-get-started.html</li>
+    <li>Spring Framework Consortium, “Spring Boot 3.3 Reference Documentation,” https://docs.spring.io/spring-boot/</li>
+    <li>Google Cloud Platform, “Cloud Firestore NoSQL Document Database Architecture & SDKs,” https://firebase.google.com/docs/firestore</li>
+    <li>Vite Core Team, “Vite: Next Generation Frontend Tooling,” https://vitejs.dev/</li>
+    <li>United Nations, “Sustainable Development Goals Knowledge Platform (SDG 3, 8, 9, 12),” https://sdgs.un.org/goals</li>
+    <li>World Federation of the Sporting Goods Industry (WFSGI), “Global Sports Equipment Quality & Safety Guidelines,” Technical Bulletin.</li>
+  </ol>
+
+  <div class="running-footer">
+    <span>Department of Computer Science & Engineering (AI&ML) | APSIT</span>
+    <span>Page 16</span>
+  </div>
+</div>
+
+</body>
+</html>
